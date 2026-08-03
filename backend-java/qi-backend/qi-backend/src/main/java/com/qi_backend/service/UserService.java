@@ -7,6 +7,7 @@ import com.qi_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.qi_backend.dto.UserResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +53,20 @@ public class UserService {
         }
 
         return jwtService.generateToken(user.getEmail());
+    }
+    public UserResponse getProfile(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getBio(),
+                user.getVerified()
+        );
     }
 }

@@ -6,6 +6,8 @@ import com.qi_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.qi_backend.dto.UserResponse;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,6 +36,13 @@ public class AuthController {
     @GetMapping("/profile")
     public String profile() {
         return "Welcome! You are authenticated.";
+    }
+    @GetMapping("/me")
+    public UserResponse getProfile(Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return userService.getProfile(email);
     }
 
 }
