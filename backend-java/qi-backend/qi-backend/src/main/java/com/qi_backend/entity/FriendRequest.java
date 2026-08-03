@@ -3,6 +3,10 @@ package com.qi_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import com.qi_backend.enums.FriendRequestStatus;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,19 +31,13 @@ public class FriendRequest {
     private User receiver;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private FriendRequestStatus status;
 
     private LocalDateTime createdAt;
 
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();
-        status = Status.PENDING;
-    }
-
-    public enum Status {
-        PENDING,
-        ACCEPTED,
-        REJECTED
+        status = FriendRequestStatus.PENDING;
     }
 }
