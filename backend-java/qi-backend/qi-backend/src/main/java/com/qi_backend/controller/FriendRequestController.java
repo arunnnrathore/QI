@@ -3,6 +3,8 @@ package com.qi_backend.controller;
 import com.qi_backend.service.FriendRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.qi_backend.entity.FriendRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/friends")
@@ -17,5 +19,18 @@ public class FriendRequestController {
             @RequestParam Long receiverId) {
 
         return friendRequestService.sendFriendRequest(senderId, receiverId);
+    }
+    @GetMapping("/pending")
+    public List<FriendRequest> getPendingRequests(
+            @RequestParam Long receiverId) {
+
+        return friendRequestService.getPendingRequests(receiverId);
+    }
+    @PostMapping("/accept")
+    public String acceptFriendRequest(
+            @RequestParam Long requestId,
+            @RequestParam Long receiverId) {
+
+        return friendRequestService.acceptFriendRequest(requestId, receiverId);
     }
 }
