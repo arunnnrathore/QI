@@ -247,6 +247,63 @@
           }
         }
       ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverId\": 3,\n  \"content\": \"Hello Arun, how are you?\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/api/messages/send",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "messages", "send"]
+            }
+          }
+        },
+        {
+          "name": "Get Chat History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8081/api/messages/history?friendId=3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "messages", "history"],
+              "query": [
+                {
+                  "key": "friendId",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }
