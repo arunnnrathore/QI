@@ -5,24 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
+public class UpdateProfileRequest {
 
-    private Long id;
-    private String username;
-    private String email;
     private String firstName;
     private String lastName;
     private String bio;
     private String profilePicture;
     private String preferredLanguage;
-    private Boolean verified;
-    private Boolean online;
-    private LocalDateTime lastSeen;
-    private LocalDateTime createdAt;
 }
