@@ -1,18 +1,23 @@
 package com.qi_backend.service;
 
 import com.qi_backend.dto.ChatMessageResponse;
+import com.qi_backend.dto.ConversationSummaryResponse;
 import com.qi_backend.entity.ChatMessage;
+import com.qi_backend.entity.Friend;
 import com.qi_backend.entity.User;
 import com.qi_backend.enums.MessageStatus;
 import com.qi_backend.repository.ChatMessageRepository;
 import com.qi_backend.repository.FriendRepository;
 import com.qi_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -83,6 +88,70 @@ public class ChatService {
         return history.stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ConversationSummaryResponse> getRecentConversations(String currentUserEmail) {
+        User currentUser = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+        List<Friend> friendsList = friendRepository.findByUserWithFriend(currentUser);
+
+        List<ConversationSummaryResponse> conversations = new ArrayList<>();
+
+        for (Friend friendRelation : friendsList) {
+            User friend = friendRelation.getFriend();
+
+            // Find the most recent message between currentUser and friend
+            List<ChatMessage> latestMessages = chatMessageRepository.findLatestMessageBetweenUsers(
+                    currentUser,
+                    friend,
+                    PageRequest.of(0, 1)
+            );
+
+            ChatMessage lastMessage = latestMessages.isEmpty() ? null : latestMessages.get(0);
+
+            // Count unread messages sent by friend to currentUser
+            long unreadCount = chatMessageRepository.countByReceiverAndSenderAndStatus(
+                    currentUser,
+                    friend,
+                    MessageStatus.SENT
+            );
+
+            ConversationSummaryResponse summary = ConversationSummaryResponse.builder()
+                    .friendId(friend.getId())
+                    .friendUsername(friend.getUsername())
+                    .friendFirstName(friend.getFirstName())
+                    .friendLastName(friend.getLastName())
+                    .friendProfilePicture(friend.getProfilePicture())
+                    .friendOnline(friend.getOnline())
+                    .friendLastSeen(friend.getLastSeen())
+                    .lastMessageId(lastMessage != null ? lastMessage.getId() : null)
+                    .lastMessageContent(lastMessage != null ? lastMessage.getContent() : null)
+                    .lastMessageSenderId(lastMessage != null ? lastMessage.getSender().getId() : null)
+                    .lastMessageTimestamp(lastMessage != null ? lastMessage.getTimestamp() : null)
+                    .lastMessageStatus(lastMessage != null ? lastMessage.getStatus() : null)
+                    .unreadCount(unreadCount)
+                    .build();
+
+            conversations.add(summary);
+        }
+
+        // Sort: conversations with the most recent messages first.
+        // Conversations without any messages yet are sorted by friend username or placed at the end.
+        conversations.sort((c1, c2) -> {
+            if (c1.getLastMessageTimestamp() != null && c2.getLastMessageTimestamp() != null) {
+                return c2.getLastMessageTimestamp().compareTo(c1.getLastMessageTimestamp());
+            } else if (c1.getLastMessageTimestamp() != null) {
+                return -1;
+            } else if (c2.getLastMessageTimestamp() != null) {
+                return 1;
+            } else {
+                return c1.getFriendUsername().compareToIgnoreCase(c2.getFriendUsername());
+            }
+        });
+
+        return conversations;
     }
 
     private ChatMessageResponse mapToResponse(ChatMessage message) {

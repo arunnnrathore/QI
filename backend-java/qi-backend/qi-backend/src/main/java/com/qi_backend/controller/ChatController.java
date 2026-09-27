@@ -1,6 +1,7 @@
 package com.qi_backend.controller;
 
 import com.qi_backend.dto.ChatMessageResponse;
+import com.qi_backend.dto.ConversationSummaryResponse;
 import com.qi_backend.dto.SendMessageRequest;
 import com.qi_backend.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,13 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
+
+    // HTTP endpoint for fetching recent conversations list with last message snippet & unread count
+    @GetMapping("/conversations")
+    public List<ConversationSummaryResponse> getRecentConversations(Authentication authentication) {
+        String currentUserEmail = authentication.getName();
+        return chatService.getRecentConversations(currentUserEmail);
+    }
 
     // HTTP endpoint for sending messages (Authenticated via JWT)
     @PostMapping("/send")

@@ -10,6 +10,9 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     List<Friend> findByUser(User user);
 
+    @org.springframework.data.jpa.repository.Query("SELECT f FROM Friend f JOIN FETCH f.friend WHERE f.user = :user")
+    List<Friend> findByUserWithFriend(@org.springframework.data.repository.query.Param("user") User user);
+
     void deleteByUserAndFriend(User user, User friend);
 
     boolean existsByUserAndFriend(User user, User friend);
