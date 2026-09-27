@@ -10,4 +10,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     List<Friend> findByUser(User user);
 
+    void deleteByUserAndFriend(User user, User friend);
+
+    boolean existsByUserAndFriend(User user, User friend);
 }

@@ -1,7 +1,7 @@
 package com.qi_backend.config;
 
-import com.qi_backend.security.JwtAuthenticationFilter;
 import com.qi_backend.security.CustomUserDetailsService;
+import com.qi_backend.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

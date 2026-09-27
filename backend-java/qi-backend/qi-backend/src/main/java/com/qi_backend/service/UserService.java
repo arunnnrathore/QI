@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.qi_backend.dto.UserResponse;
+import com.qi_backend.dto.UserSearchResponse;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,5 +71,29 @@ public class UserService {
                 user.getBio(),
                 user.getVerified()
         );
+    }
+
+    public List<UserSearchResponse> searchUsers(String query, String currentUserEmail) {
+
+        if (query == null || query.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        User currentUser = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+        List<User> matchingUsers = userRepository.searchUsers(query.trim(), currentUser.getId());
+
+        return matchingUsers.stream()
+                .map(user -> UserSearchResponse.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .profilePicture(user.getProfilePicture())
+                        .bio(user.getBio())
+                        .build())
+                .toList();
     }
 }

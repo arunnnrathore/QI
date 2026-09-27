@@ -6,14 +6,18 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "friends")
+@Table(
+        name = "friends",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "friend_id"})
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Friend
-{
+public class Friend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +34,7 @@ public class Friend
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onCreate()
-    {
+    public void onCreate() {
         createdAt = LocalDateTime.now();
     }
 }
