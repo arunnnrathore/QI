@@ -519,6 +519,97 @@
           }
         }
       ]
+    },
+    {
+      "name": "Translation",
+      "item": [
+        {
+          "name": "Translate Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Hello, how are you?\",\n  \"targetLanguage\": \"es\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/api/translation/translate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "translation", "translate"]
+            }
+          }
+        },
+        {
+          "name": "Translate Message",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8081/api/translation/message/1?targetLanguage=fr",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "translation", "message", "1"],
+              "query": [
+                {
+                  "key": "targetLanguage",
+                  "value": "fr"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Translate Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "audio",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "targetLanguage",
+                  "value": "es",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8081/api/translation/audio",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["api", "translation", "audio"]
+            }
+          }
+        }
+      ]
     }
   ]
 }
