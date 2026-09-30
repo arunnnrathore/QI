@@ -22,7 +22,7 @@ function displayName(firstName?: string, lastName?: string, username?: string): 
 
 function Avatar({ name, picture }: { name: string; picture?: string | null }) {
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cyan-300/15 font-semibold text-cyan-200">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-qi-accent/15 font-semibold text-qi-accent">
       {picture ? <img src={picture} alt="" className="h-full w-full object-cover" /> : name.slice(0, 1).toUpperCase()}
     </div>
   );
@@ -149,14 +149,14 @@ export default function FriendsTab() {
   ];
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-xl shadow-black/10">
-      <div className="border-b border-white/10 px-5 py-5 sm:px-7">
+    <section className="qi-panel overflow-hidden">
+      <div className="border-b border-qi-line px-5 py-5 sm:px-7">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold">Connections</h2>
-            <p className="mt-1 text-sm text-slate-400">Find people and manage your friend requests.</p>
+            <p className="mt-1 text-sm text-qi-secondary">Find people and manage your friend requests.</p>
           </div>
-          <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">{friends.length} friends</span>
+          <span className="rounded-full border border-qi-line px-3 py-1 text-xs text-qi-secondary">{friends.length} friends</span>
         </div>
         <div className="mt-5 flex gap-1 overflow-x-auto" role="tablist" aria-label="Friend sections">
           {sections.map((section) => (
@@ -166,7 +166,7 @@ export default function FriendsTab() {
               role="tab"
               aria-selected={activeSection === section.id}
               onClick={() => { setActiveSection(section.id); setError(''); setNotice(''); }}
-              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition ${activeSection === section.id ? 'bg-cyan-300 text-slate-950' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition ${activeSection === section.id ? 'bg-qi-accent text-qi-background' : 'qi-nav-item'}`}
             >
               {section.label}
             </button>
@@ -176,12 +176,12 @@ export default function FriendsTab() {
 
       <div className="min-h-[360px] p-5 sm:p-7">
         {error && <div className="mb-4 rounded-lg border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-200" role="alert">{error}</div>}
-        {notice && <div className="mb-4 rounded-lg border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-sm text-cyan-100" role="status">{notice}</div>}
-        {loading && <p className="py-10 text-center text-sm text-slate-400" role="status">Loading connections...</p>}
+        {notice && <div className="mb-4 rounded-lg border border-qi-accent/20 bg-qi-accent/10 px-4 py-3 text-sm text-qi-accent" role="status">{notice}</div>}
+        {loading && <p className="py-10 text-center text-sm text-qi-secondary" role="status">Loading connections...</p>}
 
         {!loading && activeSection === 'LIST' && (
           friends.length ? (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-qi-line">
               {friends.map((friend) => {
                 const name = displayName(friend.firstName, friend.lastName, friend.username);
                 return (
@@ -189,9 +189,9 @@ export default function FriendsTab() {
                     <Avatar name={name} picture={friend.profilePicture} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-medium">{name}</p>
-                      <p className="truncate text-sm text-slate-400">@{friend.username}</p>
+                      <p className="truncate text-sm text-qi-secondary">@{friend.username}</p>
                     </div>
-                    <button type="button" disabled={workingId === friend.id} onClick={() => void unfriend(friend)} className="rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:border-rose-300/30 hover:text-rose-200 disabled:opacity-50">
+                    <button type="button" disabled={workingId === friend.id} onClick={() => void unfriend(friend)} className="qi-button-secondary px-3 py-2 text-sm text-qi-secondary hover:border-rose-300/30 hover:text-rose-200 disabled:opacity-50">
                       {workingId === friend.id ? 'Working…' : 'Remove'}
                     </button>
                   </div>
@@ -203,18 +203,18 @@ export default function FriendsTab() {
 
         {!loading && activeSection === 'PENDING' && (
           pendingRequests.length ? (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-qi-line">
               {pendingRequests.map((request) => (
                 <div key={request.requestId} className="flex flex-wrap items-center gap-3 py-4 first:pt-0 last:pb-0 sm:gap-4">
                   <Avatar name={request.senderName} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">{request.senderName}</p>
-                    <p className="truncate text-sm text-slate-400">@{request.senderUsername}</p>
-                    <p className="mt-1 text-xs text-slate-500">Sent {new Date(request.createdAt).toLocaleDateString()}</p>
+                    <p className="truncate text-sm text-qi-secondary">@{request.senderUsername}</p>
+                    <p className="mt-1 text-xs text-qi-subtle">Sent {new Date(request.createdAt).toLocaleDateString()}</p>
                   </div>
                   <div className="flex w-full gap-2 sm:w-auto">
-                    <button type="button" disabled={workingId === request.requestId} onClick={() => void processRequest(request.requestId, 'accept')} className="flex-1 rounded-lg bg-cyan-300 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 disabled:opacity-50 sm:flex-none">Accept</button>
-                    <button type="button" disabled={workingId === request.requestId} onClick={() => void processRequest(request.requestId, 'reject')} className="flex-1 rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 disabled:opacity-50 sm:flex-none">Decline</button>
+                    <button type="button" disabled={workingId === request.requestId} onClick={() => void processRequest(request.requestId, 'accept')} className="qi-button-primary flex-1 px-3 py-2 text-sm disabled:opacity-50 sm:flex-none">Accept</button>
+                    <button type="button" disabled={workingId === request.requestId} onClick={() => void processRequest(request.requestId, 'reject')} className="qi-button-secondary flex-1 px-3 py-2 text-sm disabled:opacity-50 sm:flex-none">Decline</button>
                   </div>
                 </div>
               ))}
@@ -226,11 +226,11 @@ export default function FriendsTab() {
           <div>
             <form onSubmit={(event) => void handleSearch(event)} className="mb-6 flex flex-col gap-2 sm:flex-row">
               <label className="sr-only" htmlFor="friend-search">Search people</label>
-              <input id="friend-search" type="search" placeholder="Search by name, username, or email" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} className="min-w-0 flex-1 rounded-lg border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300/60 focus:outline-none" />
-              <button type="submit" disabled={loading || !searchQuery.trim()} className="rounded-lg bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-50">Search</button>
+              <input id="friend-search" type="search" placeholder="Search by name, username, or email" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} className="qi-input min-w-0 flex-1 px-4 py-3 text-sm" />
+              <button type="submit" disabled={loading || !searchQuery.trim()} className="qi-button-primary px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50">Search</button>
             </form>
-            {!searchResults.length && searchQuery.trim() && !loading && !error && <p className="py-8 text-center text-sm text-slate-400">No people found for “{searchQuery.trim()}”.</p>}
-            <div className="divide-y divide-white/5">
+            {!searchResults.length && searchQuery.trim() && !loading && !error && <p className="py-8 text-center text-sm text-qi-secondary">No people found for “{searchQuery.trim()}”.</p>}
+            <div className="divide-y divide-qi-line">
               {searchResults.map((person) => {
                 const name = displayName(person.firstName, person.lastName, person.username);
                 return (
@@ -238,10 +238,10 @@ export default function FriendsTab() {
                     <Avatar name={name} picture={person.profilePicture} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-medium">{name}</p>
-                      <p className="truncate text-sm text-slate-400">@{person.username}</p>
-                      {person.bio && <p className="mt-1 line-clamp-2 text-xs text-slate-500">{person.bio}</p>}
+                      <p className="truncate text-sm text-qi-secondary">@{person.username}</p>
+                      {person.bio && <p className="mt-1 line-clamp-2 text-xs text-qi-subtle">{person.bio}</p>}
                     </div>
-                    <button type="button" disabled={workingId === person.id} onClick={() => void sendFriendRequest(person)} className="shrink-0 rounded-lg border border-cyan-300/30 px-3 py-2 text-sm font-medium text-cyan-200 transition hover:bg-cyan-300/10 disabled:opacity-50">
+                    <button type="button" disabled={workingId === person.id} onClick={() => void sendFriendRequest(person)} className="qi-button-secondary shrink-0 border-qi-accent/30 px-3 py-2 text-sm font-medium text-qi-accent hover:bg-qi-accent/10 disabled:opacity-50">
                       {workingId === person.id ? 'Sending…' : 'Add friend'}
                     </button>
                   </div>
@@ -258,10 +258,10 @@ export default function FriendsTab() {
 function EmptyState({ title, description, action, onAction }: { title: string; description: string; action?: string; onAction?: () => void }) {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center text-center">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-xl text-cyan-200">◎</div>
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-qi-raised text-xl text-qi-accent">◎</div>
       <h3 className="font-medium">{title}</h3>
-      <p className="mt-1 max-w-sm text-sm text-slate-400">{description}</p>
-      {action && onAction && <button type="button" onClick={onAction} className="mt-4 rounded-lg bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200">{action}</button>}
+      <p className="mt-1 max-w-sm text-sm text-qi-secondary">{description}</p>
+      {action && onAction && <button type="button" onClick={onAction} className="qi-button-primary mt-4 px-4 py-2 text-sm">{action}</button>}
     </div>
   );
 }

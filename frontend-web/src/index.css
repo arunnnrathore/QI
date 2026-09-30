@@ -2,15 +2,176 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+@theme {
+  --color-qi-background: #121212;
+  --color-qi-surface: #181818;
+  --color-qi-raised: #212121;
+  --color-qi-primary: #ffffff;
+  --color-qi-secondary: #b3b3b3;
+  --color-qi-subtle: #777777;
+  --color-qi-line: #303030;
+  --color-qi-accent: #1db954;
+  --color-qi-accent-hover: #1ed760;
+  --color-qi-danger: #f87171;
+}
+
+:root {
+  font-family: Inter, 'Avenir Next', system-ui, sans-serif;
+  color: var(--qi-primary);
+  background: var(--qi-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --qi-background: var(--color-qi-background);
+  --qi-surface: var(--color-qi-surface);
+  --qi-raised: var(--color-qi-raised);
+  --qi-primary: var(--color-qi-primary);
+  --qi-secondary: var(--color-qi-secondary);
+  --qi-subtle: var(--color-qi-subtle);
+  --qi-line: var(--color-qi-line);
+  --qi-accent: var(--color-qi-accent);
+  --qi-accent-hover: var(--color-qi-accent-hover);
+  --qi-outline: rgb(255 255 255 / 8%);
+  --qi-accent-wash: rgb(29 185 84 / 12%);
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--qi-background);
+  color: var(--qi-primary);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--qi-accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--qi-background);
+  background: var(--qi-accent);
+}
+
+@layer components {
+  .qi-panel {
+    border: 1px solid var(--qi-outline);
+    border-radius: 1rem;
+    background: var(--qi-surface);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 16%);
   }
 
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  .qi-auth-backdrop {
+    background:
+      radial-gradient(ellipse at 18% 16%, color-mix(in srgb, var(--qi-accent) 11%, transparent), transparent 33%),
+      radial-gradient(ellipse at 84% 83%, color-mix(in srgb, var(--qi-accent) 7%, transparent), transparent 30%),
+      var(--qi-background);
+  }
+
+  .qi-input {
+    border: 1px solid var(--qi-outline);
+    border-radius: 0.75rem;
+    background: var(--qi-background);
+    color: var(--qi-primary);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .qi-input::placeholder {
+    color: var(--qi-subtle);
+  }
+
+  .qi-input:focus {
+    border-color: color-mix(in srgb, var(--qi-accent) 70%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--qi-accent) 12%, transparent);
+    outline: none;
+  }
+
+  .qi-button-primary {
+    border-radius: 0.75rem;
+    background: var(--qi-accent);
+    color: var(--qi-background);
+    font-weight: 700;
+    transition: background-color 150ms ease, transform 150ms ease;
+  }
+
+  .qi-button-primary:hover:not(:disabled) {
+    background: var(--qi-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .qi-button-secondary {
+    border: 1px solid var(--qi-outline);
+    border-radius: 0.75rem;
+    color: var(--qi-secondary);
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+  }
+
+  .qi-button-secondary:hover:not(:disabled) {
+    border-color: rgb(255 255 255 / 18%);
+    background: rgb(255 255 255 / 5%);
+    color: var(--qi-primary);
+  }
+
+  .qi-nav-item {
+    color: var(--qi-secondary);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .qi-nav-item:hover {
+    background: rgb(255 255 255 / 5%);
+    color: var(--qi-primary);
+  }
+
+  .qi-nav-item-active {
+    background: var(--qi-accent-wash);
+    color: var(--qi-accent);
+  }
+
+  .qi-list-item {
+    transition: background-color 150ms ease;
+  }
+
+  .qi-list-item:hover {
+    background: rgb(255 255 255 / 4%);
+  }
+
+  .qi-list-item-active {
+    background: var(--qi-accent-wash);
+    box-shadow: inset 3px 0 var(--qi-accent);
+  }
+
+  .qi-scrollbar {
+    scrollbar-color: #424242 transparent;
+    scrollbar-width: thin;
+  }
+
+  .qi-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .qi-scrollbar::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: #424242;
+    background-clip: padding-box;
   }
 }

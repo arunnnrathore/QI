@@ -27,39 +27,49 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-3xl font-bold text-blue-600">QI Messenger</h2>
-        <form onSubmit={handleLogin} className="space-y-4">
+    <main className="qi-auth-backdrop flex min-h-screen items-center justify-center px-5 py-10 text-qi-primary">
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-qi-accent text-xl font-extrabold tracking-tighter text-qi-background shadow-lg shadow-qi-accent/15">QI</div>
+          <p className="text-xs font-bold tracking-[0.24em] text-qi-accent">QUICK INTELLIGENCE</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight">A clearer way to connect.</h1>
+          <p className="mt-2 text-sm text-qi-secondary">Sign in to your QI workspace.</p>
+        </div>
+        <div className="qi-panel p-6 sm:p-8">
+          <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            <label className="mb-2 block text-sm font-medium text-qi-secondary">Email address</label>
             <input 
               type="email" 
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              autoComplete="email"
+              className="qi-input w-full px-4 py-3 text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+            <label className="mb-2 block text-sm font-medium text-qi-secondary">Password</label>
             <input 
               type="password" 
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              autoComplete="current-password"
+              className="qi-input w-full px-4 py-3 text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="rounded-lg border border-rose-400/20 bg-rose-400/10 px-3 py-2 text-sm text-rose-200" role="alert">{error}</p>}
           <button 
             type="submit"
-            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="qi-button-primary w-full py-3 text-sm"
           >
-            Sign In
+            Sign in
           </button>
-        </form>
+          </form>
+        </div>
+        <p className="mt-6 text-center text-xs text-qi-subtle">Private conversations. Thoughtful connections. Your QI.</p>
       </div>
-    </div>
+    </main>
   );
 }
