@@ -34,6 +34,8 @@ export interface UserResponse {
   profilePicture: string | null;
   bio: string | null;
   preferredLanguage: string | null;
-  status: string;
+  verified: boolean;
+  online: boolean;
+  lastSeen: string | null;
   createdAt: string;
 }
