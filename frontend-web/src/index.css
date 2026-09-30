@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @theme {
   --color-qi-background: #121212;
@@ -33,8 +31,8 @@
   --qi-line: var(--color-qi-line);
   --qi-accent: var(--color-qi-accent);
   --qi-accent-hover: var(--color-qi-accent-hover);
-  --qi-outline: rgb(255 255 255 / 8%);
-  --qi-accent-wash: rgb(29 185 84 / 12%);
+  --qi-outline: rgb(255 255 255 / 7%);
+  --qi-accent-wash: rgb(29 185 84 / 7%);
 }
 
 html,
@@ -80,10 +78,28 @@ summary:focus-visible {
   }
 
   .qi-auth-backdrop {
-    background:
-      radial-gradient(ellipse at 18% 16%, color-mix(in srgb, var(--qi-accent) 11%, transparent), transparent 33%),
-      radial-gradient(ellipse at 84% 83%, color-mix(in srgb, var(--qi-accent) 7%, transparent), transparent 30%),
-      var(--qi-background);
+    background: linear-gradient(145deg, #0b0b0b 0%, var(--qi-background) 62%, #101010 100%);
+  }
+
+  .qi-auth-card {
+    border-color: rgb(255 255 255 / 6%);
+    background: #181818;
+    box-shadow: 0 16px 40px rgb(0 0 0 / 20%);
+  }
+
+  .qi-auth-button {
+    background: #1db954;
+    box-shadow: none;
+    transition: background-color 150ms ease, transform 100ms ease;
+  }
+
+  .qi-auth-button:hover:not(:disabled) {
+    background: #20b957;
+  }
+
+  .qi-auth-button:active:not(:disabled) {
+    background: #19a94b;
+    transform: scale(0.99);
   }
 
   .qi-input {
@@ -114,7 +130,6 @@ summary:focus-visible {
 
   .qi-button-primary:hover:not(:disabled) {
     background: var(--qi-accent-hover);
-    transform: translateY(-1px);
   }
 
   .qi-button-secondary {
