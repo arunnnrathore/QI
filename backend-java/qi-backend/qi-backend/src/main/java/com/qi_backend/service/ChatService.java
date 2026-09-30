@@ -74,9 +74,9 @@ public class ChatService {
 
         ChatMessageResponse response = mapToResponse(savedMessage);
 
-        // Real-time broadcast to WebSocket topics for both users
-        messagingTemplate.convertAndSend("/topic/messages/" + receiver.getId(), response);
-        messagingTemplate.convertAndSend("/topic/messages/" + sender.getId(), response);
+        // Deliver only to the authenticated users' private STOMP queues.
+        messagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", response);
+        messagingTemplate.convertAndSendToUser(sender.getEmail(), "/queue/messages", response);
 
         return response;
     }

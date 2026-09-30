@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import FriendsTab from '../components/FriendsTab';
+import ChatPanel from '../components/ChatPanel';
 import type { UserResponse } from '../types';
 
 export default function Dashboard() {
@@ -98,15 +99,16 @@ export default function Dashboard() {
             <p className="text-xs text-slate-500">Your conversations, connections, and files in one place.</p>
           </div>
         </header>
-        {activeMainTab === 'FRIENDS' ? (
+        {activeMainTab === 'CHATS' ? (
+          <ChatPanel currentUserId={user.id} />
+        ) : activeMainTab === 'FRIENDS' ? (
           <FriendsTab />
         ) : (
           <section className="flex min-h-[60vh] items-center justify-center rounded-2xl border border-white/10 bg-slate-900/70 p-8 text-center">
             <div>
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-2xl text-cyan-300">{activeMainTab === 'CHATS' ? '◌' : '▤'}</div>
-              <h2 className="text-lg font-semibold">{activeMainTab === 'CHATS' ? 'Your conversations will appear here' : 'Your files will appear here'}</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">{activeMainTab === 'CHATS' ? 'Messaging is the next integration step. Add friends to get your workspace ready.' : 'File sharing is not connected yet. This space is ready for the file manager.'}</p>
-              {activeMainTab === 'CHATS' && <button type="button" onClick={() => setActiveMainTab('FRIENDS')} className="mt-5 rounded-lg bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200">Find people</button>}
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-2xl text-cyan-300">▤</div>
+              <h2 className="text-lg font-semibold">Your files will appear here</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">File sharing is not connected yet. This space is ready for the file manager.</p>
             </div>
           </section>
         )}
