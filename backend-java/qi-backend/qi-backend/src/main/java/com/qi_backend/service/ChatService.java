@@ -4,10 +4,12 @@ import com.qi_backend.dto.ChatMessageResponse;
 import com.qi_backend.dto.ConversationSummaryResponse;
 import com.qi_backend.entity.ChatMessage;
 import com.qi_backend.entity.Friend;
+import com.qi_backend.entity.MediaFile;
 import com.qi_backend.entity.User;
 import com.qi_backend.enums.MessageStatus;
 import com.qi_backend.repository.ChatMessageRepository;
 import com.qi_backend.repository.FriendRepository;
+import com.qi_backend.repository.MediaFileRepository;
 import com.qi_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -27,13 +29,14 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+    private final MediaFileRepository mediaFileRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
-    public ChatMessageResponse sendMessage(String senderEmail, Long receiverId, String content) {
+    public ChatMessageResponse sendMessage(String senderEmail, Long receiverId, String content, Long attachmentId) {
 
-        if (content == null || content.trim().isEmpty()) {
-            throw new RuntimeException("Message content cannot be empty");
+        if ((content == null || content.trim().isEmpty()) && attachmentId == null) {
+            throw new RuntimeException("Message must have content or an attachment");
         }
 
         User sender = userRepository.findByEmail(senderEmail)
@@ -51,10 +54,18 @@ public class ChatService {
             throw new RuntimeException("You can only message users who are your friends");
         }
 
+        // Look up optional attachment
+        MediaFile attachment = null;
+        if (attachmentId != null) {
+            attachment = mediaFileRepository.findById(attachmentId)
+                    .orElseThrow(() -> new RuntimeException("Attachment not found with id: " + attachmentId));
+        }
+
         ChatMessage message = ChatMessage.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .content(content.trim())
+                .content(content != null ? content.trim() : "")
+                .attachment(attachment)
                 .status(MessageStatus.SENT)
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -155,7 +166,7 @@ public class ChatService {
     }
 
     private ChatMessageResponse mapToResponse(ChatMessage message) {
-        return ChatMessageResponse.builder()
+        ChatMessageResponse.ChatMessageResponseBuilder builder = ChatMessageResponse.builder()
                 .id(message.getId())
                 .senderId(message.getSender().getId())
                 .senderUsername(message.getSender().getUsername())
@@ -165,7 +176,16 @@ public class ChatService {
                 .receiverName(message.getReceiver().getFirstName() + " " + (message.getReceiver().getLastName() != null ? message.getReceiver().getLastName() : ""))
                 .content(message.getContent())
                 .status(message.getStatus())
-                .timestamp(message.getTimestamp())
-                .build();
+                .timestamp(message.getTimestamp());
+
+        if (message.getAttachment() != null) {
+            MediaFile attachment = message.getAttachment();
+            builder.attachmentId(attachment.getId())
+                    .attachmentFilename(attachment.getOriginalFilename())
+                    .attachmentContentType(attachment.getContentType())
+                    .attachmentDownloadUrl("/api/files/download/" + attachment.getId());
+        }
+
+        return builder.build();
     }
 }

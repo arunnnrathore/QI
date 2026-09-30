@@ -24,4 +24,10 @@ public class ChatMessageResponse {
     private String content;
     private MessageStatus status;
     private LocalDateTime timestamp;
+
+    // Attachment fields (null if no attachment)
+    private Long attachmentId;
+    private String attachmentFilename;
+    private String attachmentContentType;
+    private String attachmentDownloadUrl;
 }

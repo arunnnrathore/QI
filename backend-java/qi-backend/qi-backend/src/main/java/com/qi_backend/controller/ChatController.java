@@ -34,7 +34,7 @@ public class ChatController {
             Authentication authentication) {
 
         String senderEmail = authentication.getName();
-        return chatService.sendMessage(senderEmail, request.getReceiverId(), request.getContent());
+        return chatService.sendMessage(senderEmail, request.getReceiverId(), request.getContent(), request.getAttachmentId());
     }
 
     // HTTP endpoint for fetching chat history between current user and friend
@@ -54,6 +54,6 @@ public class ChatController {
             Principal principal) {
 
         String senderEmail = principal.getName();
-        return chatService.sendMessage(senderEmail, request.getReceiverId(), request.getContent());
+        return chatService.sendMessage(senderEmail, request.getReceiverId(), request.getContent(), request.getAttachmentId());
     }
 }

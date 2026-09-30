@@ -30,6 +30,10 @@ public class ChatMessage {
     @Column(nullable = false, length = 4000)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attachment_id")
+    private MediaFile attachment;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MessageStatus status;
