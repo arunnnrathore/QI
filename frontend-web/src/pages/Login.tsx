@@ -17,7 +17,7 @@ export default function Login() {
       const token = response.data;
       if (token && typeof token === 'string' && !token.includes('Invalid')) {
         localStorage.setItem('token', token);
-        window.location.href = '/dashboard'; // Force full reload to reset state
+        navigate('/dashboard');
       } else {
         setError('Invalid credentials');
       }
